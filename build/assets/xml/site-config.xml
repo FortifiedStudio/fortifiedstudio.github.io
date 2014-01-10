@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<site-config>
+	<mainSWF value="Main.swf" />
+	<baseURL value="" />
+	<assetURL value="assets/" />
+	<gatewayURL value="" />
+	<locales>
+		<en>site_copy_en.xml</en>
+	</locales>
+</site-config>
