@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+	pkg: grunt.file.readJSON('package.json');
+
 	grunt.initConfig({
 
 		meta: {},
@@ -40,23 +42,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		watch: {
-			css: {
-				files: 'sass/*.scss',
-				tasks: ['compass:dev'],
-				options: {
-					interrupt: true
-				}
-			},
-			scripts: {
-				files: 'js/*.js',
-				tasks: ['concat'],
-				options: {
-					interrupt: true
-				}
-			}
-		},
-
 		jshint: {
 			options: {
 				evil: true,
@@ -85,6 +70,12 @@ module.exports = function(grunt) {
 			}
 		},
 
+		clean: {
+			build: {
+				src: [ 'build' ]
+			},
+		},
+
 		copy: {
 			main: {
 				files: [
@@ -111,10 +102,51 @@ module.exports = function(grunt) {
 			}
 		},
 
-		clean: {
-			build: {
-				src: [ 'build' ]
+		replace: {
+			dist: {
+				options: {
+					variables: {
+						'baseurl': 'http://github.fortifiedstudio.com'
+					},
+					patterns: [
+						{ match: 'year', replacement: '<%= grunt.template.today("yyyy") %>' }
+					]
+					},
+				files: [ { src: 'index.src.html', dest: 'index.html' } ]
+			}
+		},
+
+		watch: {
+			options: {
+				forever: false,
+				livereload: true
 			},
+			css: {
+				files: 'sass/*.scss',
+				tasks: ['compass:dev'],
+			},
+			scripts: {
+				files: 'js/*.js',
+				tasks: ['concat'],
+			},
+			html: {
+				files: 'index.src.html',
+				tasks: ['replace']
+			}
+		},
+
+		connect: {
+			server: {
+				options: {
+					protocol: 'http',
+					hostname: '*',
+					port: 4000,
+					base: '.',
+					keepalive: false,
+					open: true,
+					livereload: true
+				}
+			}
 		}
 
 	});
@@ -126,6 +158,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-replace');
+	grunt.loadNpmTasks('grunt-contrib-connect');
+
+	grunt.registerTask('server',[
+		'connect',
+		'watch'
+	]);
 
 	grunt.registerTask('default', [
 		'clean',
@@ -133,6 +172,7 @@ module.exports = function(grunt) {
 		'jshint',
 		'concat',
 		'uglify',
+		'replace',
 		'copy'
 	]);
 
