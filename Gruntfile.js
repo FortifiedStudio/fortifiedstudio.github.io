@@ -106,7 +106,7 @@ module.exports = function(grunt) {
 			dist: {
 				options: {
 					variables: {
-						'baseurl': 'http://github.fortifiedstudio.com'
+						'baseurl': 'http://fortifiedstudio.com'
 					},
 					patterns: [
 						{ match: 'year', replacement: '<%= grunt.template.today("yyyy") %>' }
